@@ -187,7 +187,9 @@ func main() {
 	ingestArrowBatch(ctx, numRowsinBatch, st, appendFalse)
 
 	for {
+		st, _ := conn.NewStatement()
 		deleteFromDuckDB(st, ctx)
+		st.Close()
 		time.Sleep(10 * time.Millisecond)
 
 		// Run garbage Collection
@@ -198,7 +200,9 @@ func main() {
 
 		// Ingest New Arrow Data of same size
 		append := true
+		st, _ = conn.NewStatement()
 		ingestArrowBatch(ctx, numRowsinBatch, st, append)
+		st.Close()
 		time.Sleep(10 * time.Millisecond)
 	}
 }
